@@ -1,29 +1,29 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "carttogetherstrong",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Cart together strong",
+  "description": "Carts are strong, when together.",
   "authors": [
-    "Me!"
+    "TheEpicBlock"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/TheEpicBlock/cart-together-strong/blob/master/README.md",
+    "sources": "https://github.com/TheEpicBlock/cart-together-strong"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "LGPL",
+  "icon": "assets/carttogetherstrong/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleMod"
+      "nl.theepicblock.carttogetherstrong.CTS"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "carttogetherstrong.mixins.json"
   ],
 
   "depends": {
