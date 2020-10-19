@@ -4,7 +4,9 @@
   "package": "nl.theepicblock.carttogetherstrong.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AbstractMinecartEntityMixin"
+    "AbstractMinecartEntityMixin",
+    "EntityMixin",
+    "MinecartEntityRendererMixin"
   ],
   "client": [
   ],
