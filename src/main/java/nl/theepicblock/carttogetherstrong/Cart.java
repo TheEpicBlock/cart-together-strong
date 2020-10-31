@@ -1,6 +1,7 @@
 package nl.theepicblock.carttogetherstrong;
 
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public interface Cart {
@@ -19,4 +20,6 @@ public interface Cart {
     void setVelocityRaw(Vec3d v);
 
     void addVelocityRaw(Vec3d v);
+
+    Direction getMovingDirection();
 }

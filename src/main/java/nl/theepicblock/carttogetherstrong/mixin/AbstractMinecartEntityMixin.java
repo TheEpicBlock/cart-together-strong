@@ -2,54 +2,26 @@ package nl.theepicblock.carttogetherstrong.mixin;
 
 import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PoweredRailBlock;
+import net.minecraft.block.enums.RailShape;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import nl.theepicblock.carttogetherstrong.Cart;
 import nl.theepicblock.carttogetherstrong.Train;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
-import java.util.List;
-
 @Mixin(AbstractMinecartEntity.class)
 public abstract class AbstractMinecartEntityMixin extends Entity implements Cart {
-    @Shadow public abstract int getDamageWobbleTicks();
 
-    @Shadow public abstract void setDamageWobbleTicks(int wobbleTicks);
-
-    @Shadow public abstract float getDamageWobbleStrength();
-
-    @Shadow public abstract void setDamageWobbleStrength(float f);
-
-    @Shadow private int clientInterpolationSteps;
-    @Shadow private double clientX;
-    @Shadow private double clientY;
-    @Shadow private double clientZ;
-    @Shadow private double clientYaw;
-    @Shadow private double clientPitch;
-
-    @Shadow protected abstract void moveOnRail(BlockPos pos, BlockState state);
-
-    @Shadow public abstract void onActivatorRail(int x, int y, int z, boolean powered);
-
-    @Shadow protected abstract void moveOffRail();
+    @Shadow public abstract Direction getMovementDirection();
 
     @Unique private Train train = new Train(this);
 
@@ -92,7 +64,25 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Cart
 
     @Override
     public void setVelocity(Vec3d velocity) {
-        train.setVelocityForAll(velocity);
+        train.setVelocityRelative(velocity, this.getMovingDirection());
+    }
+
+    @Override
+    public Direction getMovingDirection() {
+        Direction d = this.getMovementDirection();
+        BlockState blockState = this.world.getBlockState(getBlockPos());
+        if (AbstractRailBlock.isRail(blockState)) {
+            AbstractRailBlock abstractRailBlock = (AbstractRailBlock)blockState.getBlock();
+            RailShape railShape = (RailShape)blockState.get(abstractRailBlock.getShapeProperty());
+            if (railShape == RailShape.NORTH_SOUTH) d = Direction.NORTH;
+            if (railShape == RailShape.EAST_WEST) d = Direction.EAST;
+        }
+        Vec3d velocity = this.getVelocity();
+        if (d == Direction.SOUTH || d == Direction.NORTH) {
+            return velocity.z < 0 ? Direction.NORTH : Direction.SOUTH;
+        } else {
+            return velocity.x < 0 ? Direction.WEST : Direction.EAST;
+        }
     }
 
     @Override

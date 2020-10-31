@@ -1,6 +1,6 @@
 package nl.theepicblock.carttogetherstrong;
 
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
@@ -39,6 +39,14 @@ public class Train {
     public void setVelocityForAll(Vec3d v) {
         for (Cart cart : linkedCarts) {
             cart.setVelocityRaw(v);
+        }
+    }
+
+    public void setVelocityRelative(Vec3d v, Direction d) {
+        for (Cart cart : linkedCarts) {
+            Direction cartDirection = cart.getMovingDirection();
+            Vec3d r = RotationUtil.rotate(v, d, cartDirection);
+            cart.setVelocityRaw(r);
         }
     }
 
